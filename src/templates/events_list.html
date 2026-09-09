@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Events - Campus Event Manager{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Events</h1>
+  <a href="{{ url_for('events.new_event') }}" class="btn btn-primary">+ New event</a>
+</div>
+
+<form method="get" class="row g-2 mb-4">
+  <div class="col-md-3">
+    <input type="text" name="q" class="form-control" placeholder="Search by title" value="{{ search }}">
+  </div>
+  <div class="col-md-2">
+    <select name="category" class="form-select">
+      <option value="">All categories</option>
+      {% for c in categories %}
+      <option value="{{ c }}" {% if c == category %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="tag" class="form-select">
+      <option value="">All tags</option>
+      {% for t in tags %}
+      <option value="{{ t }}" {% if t == tag %}selected{% endif %}>{{ t }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="time" class="form-select">
+      <option value="">Upcoming & past</option>
+      <option value="upcoming" {% if time_filter == 'upcoming' %}selected{% endif %}>Upcoming only</option>
+      <option value="past" {% if time_filter == 'past' %}selected{% endif %}>Past only</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="sort" class="form-select">
+      <option value="asc" {% if sort_dir == 'asc' %}selected{% endif %}>Date: soonest first</option>
+      <option value="desc" {% if sort_dir == 'desc' %}selected{% endif %}>Date: latest first</option>
+    </select>
+  </div>
+  <div class="col-md-1">
+    <button type="submit" class="btn btn-outline-secondary w-100">Filter</button>
+  </div>
+</form>
+
+<div class="table-responsive">
+<table class="table table-hover align-middle">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Category</th>
+      <th>Start date</th>
+      <th>Location</th>
+      <th>Capacity</th>
+      <th>Confirmed</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in events %}
+    <tr>
+      <td><a href="{{ url_for('events.event_detail', event_id=e._id) }}">{{ e.title }}</a></td>
+      <td>{{ e.category }}</td>
+      <td>{{ e.startDate.strftime('%d %b %Y, %H:%M') }}</td>
+      <td>{{ e.location.building }} - {{ e.location.room }}</td>
+      <td>{{ e.capacity }}</td>
+      <td>{{ e.confirmedCount }}</td>
+      <td>
+        {% if e.isFull %}
+        <span class="badge badge-full">Full</span>
+        {% elif e.startDate < now %}
+        <span class="badge bg-secondary">Past</span>
+        {% else %}
+        <span class="badge bg-success">Open</span>
+        {% endif %}
+      </td>
+      <td class="text-end">
+        <a href="{{ url_for('events.edit_event', event_id=e._id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+        <form method="post" action="{{ url_for('events.delete_event', event_id=e._id) }}" class="d-inline"
+              onsubmit="return confirm('Delete this event?');">
+          <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" class="text-center text-muted py-4">No events match your filters.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% endblock %}

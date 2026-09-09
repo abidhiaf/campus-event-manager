@@ -1,0 +1,16 @@
+.stat-card {
+  border-radius: 0.75rem;
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.badge-full {
+  background-color: #dc3545;
+}
+
+.tag-badge {
+  margin-right: 0.25rem;
+}

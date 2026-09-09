@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if mode == 'edit' else 'New' }} event - Campus Event Manager{% endblock %}
+{% block content %}
+
+<h1 class="mb-4">{{ 'Edit event' if mode == 'edit' else 'New event' }}</h1>
+
+<form method="post" class="row g-3" style="max-width: 720px;">
+  <div class="col-12">
+    <label class="form-label">Title</label>
+    <input type="text" name="title" class="form-control" value="{{ event.title if event else '' }}" required>
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Description</label>
+    <textarea name="description" class="form-control" rows="3">{{ event.description if event else '' }}</textarea>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Category</label>
+    <input type="text" name="category" class="form-control" value="{{ event.category if event else '' }}" required>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Tags (comma-separated)</label>
+    <input type="text" name="tags" class="form-control" value="{{ event.tags if event else '' }}" placeholder="python, ai">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Start date</label>
+    <input type="datetime-local" name="startDate" class="form-control" value="{{ event.startDate if event else '' }}" required>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">End date</label>
+    <input type="datetime-local" name="endDate" class="form-control" value="{{ event.endDate if event else '' }}" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Capacity</label>
+    <input type="number" min="1" name="capacity" class="form-control" value="{{ event.capacity if event else '' }}" required>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Building</label>
+    <input type="text" name="building" class="form-control" value="{{ event.building if event else '' }}" required>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Room</label>
+    <input type="text" name="room" class="form-control" value="{{ event.room if event else '' }}" required>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Campus</label>
+    <input type="text" name="campus" class="form-control" value="{{ event.campus if event else 'Paris' }}" required>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Organizer</label>
+    <select name="organizerId" class="form-select" required>
+      <option value="">Select an organizer</option>
+      {% for u in users %}
+      <option value="{{ u._id }}" {% if event and event.organizerId == u._id|string %}selected{% endif %}>
+        {{ u.firstName }} {{ u.lastName }} ({{ u.department }})
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-12 mt-4">
+    <button type="submit" class="btn btn-primary">{{ 'Save changes' if mode == 'edit' else 'Create event' }}</button>
+    <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">Cancel</a>
+  </div>
+</form>
+
+{% endblock %}

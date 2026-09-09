@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Analytics - Campus Event Manager{% endblock %}
+{% block content %}
+
+<h1 class="mb-4">Analytics</h1>
+
+<div class="card mb-4">
+  <div class="card-header">A. Registrations by category</div>
+  <div class="card-body p-0">
+    <table class="table mb-0">
+      <thead><tr><th>Category</th><th>Number of events</th><th>Confirmed registrations</th></tr></thead>
+      <tbody>
+        {% for row in by_category %}
+        <tr><td>{{ row.category }}</td><td>{{ row.eventCount }}</td><td>{{ row.confirmedRegistrations }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">B. Top 5 most popular events</div>
+  <div class="card-body p-0">
+    <table class="table mb-0">
+      <thead><tr><th>Title</th><th>Category</th><th>Capacity</th><th>Confirmed</th><th>Occupancy</th></tr></thead>
+      <tbody>
+        {% for e in top_events %}
+        <tr>
+          <td>{{ e.title }}</td><td>{{ e.category }}</td><td>{{ e.capacity }}</td>
+          <td>{{ e.confirmedCount }}</td><td>{{ e.occupancyPct }}%</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">C. Users with no registration ({{ no_registration_users|length }})</div>
+  <div class="card-body p-0">
+    {% if no_registration_users %}
+    <table class="table mb-0">
+      <thead><tr><th>Name</th><th>Email</th><th>Department</th></tr></thead>
+      <tbody>
+        {% for u in no_registration_users %}
+        <tr><td>{{ u.firstName }} {{ u.lastName }}</td><td>{{ u.email }}</td><td>{{ u.department }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="p-3 mb-0 text-muted">Every user is registered for at least one event.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">D. Events above average occupancy (average: {{ avg_occupancy }}%)</div>
+  <div class="card-body p-0">
+    <table class="table mb-0">
+      <thead><tr><th>Title</th><th>Category</th><th>Capacity</th><th>Confirmed</th><th>Occupancy</th></tr></thead>
+      <tbody>
+        {% for e in above_avg_events %}
+        <tr>
+          <td>{{ e.title }}</td><td>{{ e.category }}</td><td>{{ e.capacity }}</td>
+          <td>{{ e.confirmedCount }}</td><td>{{ e.occupancyPct }}%</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-3">No events above average.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">E. Most used tags</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>Tag</th><th>Events</th></tr></thead>
+          <tbody>
+            {% for t in used_tags %}
+            <tr><td>{{ t._id }}</td><td>{{ t.eventCount }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">F. Events by month</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>Month</th><th>Events</th><th>Registrations</th></tr></thead>
+          <tbody>
+            {% for m in by_month %}
+            <tr><td>{{ m._id }}</td><td>{{ m.eventCount }}</td><td>{{ m.totalRegistrations }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

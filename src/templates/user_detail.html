@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ user.firstName }} {{ user.lastName }} - Campus Event Manager{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+    <p class="text-muted mb-0">{{ user.email }} - {{ user.department }} - {{ user.role }}</p>
+  </div>
+  <div>
+    <a href="{{ url_for('users.edit_user', user_id=user._id) }}" class="btn btn-outline-secondary">Edit</a>
+    <form method="post" action="{{ url_for('users.delete_user', user_id=user._id) }}" class="d-inline"
+          onsubmit="return confirm('Delete this user?');">
+      <button type="submit" class="btn btn-outline-danger">Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header">Interests</div>
+      <div class="card-body">
+        {% if user.interests %}
+          {% for i in user.interests %}<span class="badge bg-light text-dark border tag-badge mb-1">{{ i }}</span>{% endfor %}
+        {% else %}
+        <p class="text-muted mb-0">No interests listed.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-6">
+        <div class="card text-bg-info text-center">
+          <div class="card-body">
+            <div class="stat-value">{{ upcoming_count }}</div>
+            <div>Upcoming</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card text-bg-secondary text-center">
+          <div class="card-body">
+            <div class="stat-value">{{ past_count }}</div>
+            <div>Past</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">Event participation ({{ registered_events|length }})</div>
+      <div class="card-body p-0">
+        {% if registered_events %}
+        <table class="table mb-0">
+          <thead><tr><th>Event</th><th>Category</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for e in registered_events %}
+            <tr>
+              <td><a href="{{ url_for('events.event_detail', event_id=e._id) }}">{{ e.title }}</a></td>
+              <td>{{ e.category }}</td>
+              <td>{{ e.startDate.strftime('%d %b %Y, %H:%M') }}</td>
+              <td>
+                {% if e.status == 'confirmed' %}<span class="badge bg-success">Confirmed</span>
+                {% elif e.status == 'waiting' %}<span class="badge bg-warning text-dark">Waiting</span>
+                {% else %}<span class="badge bg-secondary">Cancelled</span>{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="p-3 mb-0 text-muted">This user is not registered for any event.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

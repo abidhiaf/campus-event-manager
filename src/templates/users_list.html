@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Users - Campus Event Manager{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Users</h1>
+  <a href="{{ url_for('users.new_user') }}" class="btn btn-primary">+ New user</a>
+</div>
+
+<form method="get" class="row g-2 mb-4">
+  <div class="col-md-5">
+    <input type="text" name="q" class="form-control" placeholder="Search by name or email" value="{{ search }}">
+  </div>
+  <div class="col-md-3">
+    <select name="department" class="form-select">
+      <option value="">All departments</option>
+      {% for d in departments %}
+      <option value="{{ d }}" {% if d == department %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="role" class="form-select">
+      <option value="">All roles</option>
+      {% for r in roles %}
+      <option value="{{ r }}" {% if r == role %}selected{% endif %}>{{ r }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-outline-secondary w-100">Filter</button>
+  </div>
+</form>
+
+<div class="table-responsive">
+<table class="table table-hover align-middle">
+  <thead>
+    <tr>
+      <th>Name</th><th>Email</th><th>Department</th><th>Role</th><th>Interests</th><th>Registrations</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td><a href="{{ url_for('users.user_detail', user_id=u._id) }}">{{ u.firstName }} {{ u.lastName }}</a></td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.department }}</td>
+      <td>{{ u.role }}</td>
+      <td>
+        {% for i in u.interests %}<span class="badge bg-light text-dark border tag-badge">{{ i }}</span>{% endfor %}
+      </td>
+      <td>{{ u.registrationCount }}</td>
+      <td class="text-end">
+        <a href="{{ url_for('users.edit_user', user_id=u._id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="text-center text-muted py-4">No users match your filters.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% endblock %}
