@@ -101,6 +101,12 @@ def main():
     db.events.create_index("tags", name="idx_tags")
     db.events.create_index("organizerId", name="idx_organizerId")
 
+    # Compound indexes matching the actual combined filters used by the UI:
+    # the Events page filters by category and sorts by startDate at the same time,
+    # and the Users page filters by department and role together.
+    db.events.create_index([("category", 1), ("startDate", 1)], name="idx_category_startDate")
+    db.users.create_index([("department", 1), ("role", 1)], name="idx_department_role")
+
     print(f"Database '{DB_NAME}' initialized.")
     print("users indexes:  ", list(db.users.index_information().keys()))
     print("events indexes: ", list(db.events.index_information().keys()))

@@ -49,7 +49,9 @@ def list_users():
         conditions.append({"role": role})
 
     query = {"$and": conditions} if conditions else {}
-    users = list(db.users.find(query).sort([("lastName", 1), ("firstName", 1)]))
+    # Projection: the directory view doesn't need createdAt.
+    projection = {"firstName": 1, "lastName": 1, "email": 1, "department": 1, "role": 1, "interests": 1}
+    users = list(db.users.find(query, projection).sort([("lastName", 1), ("firstName", 1)]))
 
     counts = registration_counts(db)
     for u in users:

@@ -48,7 +48,9 @@ def list_events():
         query["$and"] = conditions
 
     sort_order = 1 if sort_dir == "asc" else -1
-    events = list(db.events.find(query).sort("startDate", sort_order))
+    # Projection: the list view only needs these fields, not description/tags/organizerId/createdAt.
+    projection = {"title": 1, "category": 1, "startDate": 1, "location": 1, "capacity": 1, "registrations": 1}
+    events = list(db.events.find(query, projection).sort("startDate", sort_order))
 
     for e in events:
         e["confirmedCount"] = confirmed_count(e)
