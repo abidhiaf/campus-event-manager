@@ -1,5 +1,7 @@
 # Campus Event Manager
 
+[![Tests](https://github.com/YOUR_GITHUB_USERNAME/campus-event-manager/actions/workflows/tests.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/campus-event-manager/actions/workflows/tests.yml)
+
 A small web application for managing campus events (workshops, talks, meetups, hackathons)
 built for the NoSQL Development Project (MCS DE1). It uses MongoDB as its only data store and
 a Flask backend that talks to it directly through PyMongo, so every query and aggregation
@@ -99,7 +101,8 @@ The app runs on **http://localhost:5050** by default (configurable via `PORT`).
 
 A small pytest suite covers the form-validation rules (empty title, capacity <= 0, end date
 before start date, invalid email, etc.) used before any write to MongoDB. It needs no database
-connection.
+connection, and it also runs automatically on every push via GitHub Actions
+(`.github/workflows/tests.yml`).
 
 ```bash
 pytest tests/
@@ -118,4 +121,4 @@ pytest tests/
 
 ## 10. Author
 
-Abidhia Fahmed
+Ahmed ABIDHIAF
