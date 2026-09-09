@@ -95,7 +95,17 @@ python src/app.py
 
 The app runs on **http://localhost:5050** by default (configurable via `PORT`).
 
-## 8. Main application pages
+## 8. Run the tests
+
+A small pytest suite covers the form-validation rules (empty title, capacity <= 0, end date
+before start date, invalid email, etc.) used before any write to MongoDB. It needs no database
+connection.
+
+```bash
+pytest tests/
+```
+
+## 9. Main application pages
 
 | Page | URL | Description |
 |---|---|---|
@@ -106,6 +116,6 @@ The app runs on **http://localhost:5050** by default (configurable via `PORT`).
 | User detail | `/users/<id>` | User info, interests, full participation history (via `$lookup`), upcoming/past counts. |
 | Analytics | `/analytics/` | Six aggregation-pipeline analyses: registrations by category, top 5 events, users with no registration, events above average occupancy, most used tags, events by month. |
 
-## 9. Author
+## 10. Author
 
 Abidhia Fahmed
