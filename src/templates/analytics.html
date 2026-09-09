@@ -4,6 +4,19 @@
 
 <h1 class="mb-4">Analytics</h1>
 
+{% if insights %}
+<div class="card mb-4 border-primary">
+  <div class="card-header bg-primary text-white">Key insights</div>
+  <div class="card-body">
+    <ul class="mb-0">
+      {% for insight in insights %}
+      <li>{{ insight }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
 <div class="card mb-4">
   <div class="card-header">A. Registrations by category</div>
   <div class="card-body p-0">

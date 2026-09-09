@@ -166,19 +166,72 @@ def events_by_month(db):
     return list(db.events.aggregate(pipeline))
 
 
+def build_insights(by_category, no_registration_users, avg_occupancy, above_avg_events, used_tags, by_month):
+    """Turns the raw aggregation results above into a handful of plain-English
+    takeaways. Every number here comes straight from the pipelines already
+    computed for this page - nothing is hard-coded."""
+    insights = []
+
+    if by_category:
+        total_confirmed = sum(row["confirmedRegistrations"] for row in by_category)
+        top = by_category[0]
+        if total_confirmed > 0:
+            share = round(top["confirmedRegistrations"] / total_confirmed * 100, 1)
+            insights.append(
+                f"“{top['category']}” leads engagement: {top['confirmedRegistrations']} confirmed "
+                f"registrations across {top['eventCount']} events — {share}% of all confirmed sign-ups."
+            )
+
+    if used_tags:
+        top_tag = used_tags[0]
+        insights.append(
+            f"“{top_tag['_id']}” is the most common tag, used on {top_tag['eventCount']} events."
+        )
+
+    if by_month:
+        busiest = max(by_month, key=lambda m: m["totalRegistrations"])
+        insights.append(
+            f"{busiest['_id']} is the busiest month: {busiest['eventCount']} events and "
+            f"{busiest['totalRegistrations']} registrations."
+        )
+
+    if above_avg_events:
+        insights.append(
+            f"{len(above_avg_events)} event(s) run above the {avg_occupancy}% average occupancy rate, "
+            f"led by “{above_avg_events[0]['title']}” at {above_avg_events[0]['occupancyPct']}%."
+        )
+
+    if no_registration_users:
+        insights.append(
+            f"{len(no_registration_users)} user(s) have not registered for a single event yet "
+            "— worth a reminder email."
+        )
+
+    return insights
+
+
 @analytics_bp.route("/")
 def index():
     db = get_db()
 
+    by_category = registrations_by_category(db)
+    no_registration_users = users_without_registration(db)
     avg_occupancy, above_avg_events = events_above_average_occupancy(db)
+    used_tags = most_used_tags(db)
+    by_month = events_by_month(db)
+
+    insights = build_insights(
+        by_category, no_registration_users, avg_occupancy, above_avg_events, used_tags, by_month
+    )
 
     return render_template(
         "analytics.html",
-        by_category=registrations_by_category(db),
+        by_category=by_category,
         top_events=top_popular_events(db),
-        no_registration_users=users_without_registration(db),
+        no_registration_users=no_registration_users,
         avg_occupancy=avg_occupancy,
         above_avg_events=above_avg_events,
-        used_tags=most_used_tags(db),
-        by_month=events_by_month(db),
+        used_tags=used_tags,
+        by_month=by_month,
+        insights=insights,
     )
