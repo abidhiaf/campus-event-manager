@@ -1,8 +1,5 @@
 # Campus Event Manager
 
-<<<<<<< Updated upstream
-
-=======
 [![Tests](https://github.com/abidhiaf/campus-event-manager/actions/workflows/tests.yml/badge.svg)](https://github.com/abidhiaf/campus-event-manager/actions/workflows/tests.yml)
 
 A small web application for managing campus events (workshops, talks, meetups, hackathons)
@@ -122,6 +119,6 @@ pytest tests/
 | User detail | `/users/<id>` | User info, interests, full participation history (via `$lookup`), upcoming/past counts. |
 | Analytics | `/analytics/` | Six aggregation-pipeline analyses: registrations by category, top 5 events, users with no registration, events above average occupancy, most used tags, events by month. |
 
-## 10. Author
+## Author
 
 Ahmed ABIDHIAF
