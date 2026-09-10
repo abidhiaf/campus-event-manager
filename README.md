@@ -1,9 +1,9 @@
 # Campus Event Manager
 
-[![Tests](https://github.com/YOUR_GITHUB_USERNAME/campus-event-manager/actions/workflows/tests.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/campus-event-manager/actions/workflows/tests.yml)
+
 
 A small web application for managing campus events (workshops, talks, meetups, hackathons)
-built for the NoSQL Development Project (MCS DE1). It uses MongoDB as its only data store and
+built for the NoSQL Development Project. It uses MongoDB as its only data store and
 a Flask backend that talks to it directly through PyMongo, so every query and aggregation
 pipeline stays visible in the source code.
 
