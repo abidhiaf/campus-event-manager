@@ -1,6 +1,9 @@
 # Campus Event Manager
 
+<<<<<<< Updated upstream
 
+=======
+[![Tests](https://github.com/abidhiaf/campus-event-manager/actions/workflows/tests.yml/badge.svg)](https://github.com/abidhiaf/campus-event-manager/actions/workflows/tests.yml)
 
 A small web application for managing campus events (workshops, talks, meetups, hackathons)
 built for the NoSQL Development Project. It uses MongoDB as its only data store and
